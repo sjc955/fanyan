@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專業裝潢預算試算</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        h2 { color: #2c3e50; text-align: center; margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; background: #00b900; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #009900; }
+        #resultArea { display: none; margin-top: 25px; padding: 20px; background: #e8f5e9; border-radius: 10px; border-left: 5px solid #28a745; }
+        .price { font-size: 24px; color: #d9534f; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>🏠 裝潢報價快速試算</h2>
+    <label>1. 房屋所在地</label>
+    <select id="location">
+        <option value="1.1">雙北地區</option>
+        <option value="1.0">桃園/新竹/台中</option>
+        <option value="0.9">南部地區</option>
+    </select>
+    <label>2. 房屋年齡 (年)</label>
+    <input type="number" id="age" placeholder="例如：15">
+    <label>3. 室內坪數</label>
+    <input type="number" id="size" placeholder="例如：25">
+    <button onclick="calc()">立即取得預估報價</button>
+    <div id="resultArea">
+        <p>初步預估金額：</p>
+        <b class="price">NT$ <span id="totalPrice">0</span> 萬元起</b>
+        <hr>
+        <p style="font-size: 14px; color: #666;">點擊下方按鈕連繫設計師：</p>
+        <button onclick="sendToLine()" style="background: #007bff;">📱 聯繫設計師接洽</button>
+    </div>
+</div>
+<script>
+function calc() {
+    const loc = parseFloat(document.getElementById('location').value);
+    const age = parseInt(document.getElementById('age').value);
+    const size = parseInt(document.getElementById('size').value);
+    if(!age || !size) return alert("請填寫完整資訊喔！");
+    let basePrice = age < 5 ? 4.5 : (age < 20 ? 7.5 : 11);
+    const result = Math.round(basePrice * size * loc);
+    document.getElementById('totalPrice').innerText = result;
+    document.getElementById('resultArea').style.display = 'block';
+}
+function sendToLine() {
+    const locText = document.getElementById('location').selectedOptions[0].text;
+    const age = document.getElementById('age').value;
+    const size = document.getElementById('size').value;
+    const price = document.getElementById('totalPrice').innerText;
+    const message = `你好，我想諮詢裝潢報價：\n📍 地點：${locText}\n📅 屋齡：${age}年\n📐 坪數：${size}坪\n💰 系統初估：約 ${price} 萬元\n請跟我聯絡！`;
+    window.location.href = "https://line.me/R/msg/text/?" + encodeURIComponent(message);
+}
+</script>
+</body>
+</html>
