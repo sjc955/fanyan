@@ -5,178 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>範岩全能裝修報價系統</title>
     <style>
-        body { font-family: "Microsoft JhengHei", sans-serif; background: #f0f2f5; padding: 10px; margin: 0; }
-        .container { max-width: 950px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        body { font-family: "Microsoft JhengHei", sans-serif; background: #f0f2f5; padding: 10px; margin: 0; color: #333; }
+        .container { max-width: 950px; margin: 20px auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #1a2a6c; border-bottom: 4px solid #1a2a6c; padding-bottom: 10px; margin-bottom: 5px; }
         .subtitle { text-align: center; color: #555; font-size: 15px; margin-bottom: 25px; }
-        .info-box { background: #e8effa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c8d6e5; }
+        
+        /* 客戶資料區塊 */
+        .info-box { background: #e8effa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #c8d6e5; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .info-item { display: flex; flex-direction: column; }
+        .info-item label { font-weight: bold; margin-bottom: 5px; color: #1a2a6c; }
+        .info-item input, .info-item select { padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 15px; }
+        .full-width { grid-column: span 2; }
+
         .category-header { background: linear-gradient(to right, #1a2a6c, #b21f1f); color: white; padding: 10px 15px; margin-top: 30px; border-radius: 5px; font-weight: bold; }
         table { width: 100%; border-collapse: collapse; margin-top: 5px; background: #fff; }
-        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
-        th { background: #f8f9fa; color: #666; width: 50%; }
-        input[type="number"] { width: 65px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
-        .price-text { color: #d35400; font-weight: bold; }
+        th, td { padding: 12px 10px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
+        th { background: #f8f9fa; color: #666; }
+        input[type="number"] { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; text-align: center; font-size: 16px; }
+        .price-range { color: #d35400; font-weight: bold; font-size: 0.9em; }
+        
         .sticky-footer { position: sticky; bottom: 0; background: rgba(255,255,255,0.98); padding: 15px; border-top: 3px solid #1a2a6c; text-align: center; z-index: 1000; }
-        .calc-btn { background: #1a2a6c; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 1.3em; cursor: pointer; width: 100%; font-weight: bold; }
-        #result-area { display: none; margin-top: 30px; padding: 20px; background: #fffbe6; border: 2px dashed #f1c40f; border-radius: 12px; }
-        .total-row { font-size: 2.2em; color: #c0392b; font-weight: bold; text-align: right; margin-top: 15px; }
-        .line-btn { display: block; background: #06C755; color: white; text-align: center; padding: 18px; border-radius: 10px; font-size: 1.4em; text-decoration: none; font-weight: bold; margin-top: 25px; }
-        .note { color: #e67e22; font-weight: bold; text-align: center; font-size: 1.2em; margin-top: 20px; }
+        .calc-btn { background: #1a2a6c; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 1.3em; cursor: pointer; width: 100%; font-weight: bold; box-shadow: 0 4px 10px rgba(26,42,108,0.3); }
+        
+        #result-area { display: none; margin-top: 30px; padding: 25px; background: #fffbe6; border: 2px dashed #f1c40f; border-radius: 12px; }
+        .total-row { font-size: 2.2em; color: #c0392b; font-weight: bold; text-align: right; margin-top: 15px; border-top: 2px solid #ddd; padding-top: 15px; }
+        
+        .contact-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .line-btn { display: flex; align-items: center; justify-content: center; background: #06C755; color: white; text-align: center; padding: 15px; border-radius: 10px; font-size: 1.1em; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .line-personal { background: #007aff; }
+        .line-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        
+        @media (max-width: 600px) { .info-box { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } .contact-box { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>🏠 範岩全能裝修報價系統</h1>
-    <div class="subtitle">專業百項服務 · 價格公開透明 · 中低價位優質選</div>
+    <div class="subtitle">專業百項服務 · 區間報價參考 · 預約現勘最精準</div>
 
+    <!-- 客戶資料填寫區 -->
     <div class="info-box">
-        <label><b>📍 施工地址與聯繫人：</b></label>
-        <input type="text" id="user_info" placeholder="例如：桃園市中壢區王先生 0912-345xxx" style="width: 100%; padding: 10px; margin-top: 8px; border-radius: 4px; border:1px solid #ccc; box-sizing: border-box;">
+        <div class="info-item">
+            <label>👤 客戶姓名：</label>
+            <input type="text" id="cust_name" placeholder="例如：王大明 先生">
+        </div>
+        <div class="info-item">
+            <label>📞 聯絡電話：</label>
+            <input type="tel" id="cust_tel" placeholder="例如：0912-345678">
+        </div>
+        <div class="info-item full-width">
+            <label>📍 施工地址：</label>
+            <input type="text" id="cust_addr" placeholder="請輸入完整施工地址">
+        </div>
+        <div class="info-item">
+            <label>🏢 樓層/電梯：</label>
+            <select id="cust_floor">
+                <option value="有電梯">有電梯</option>
+                <option value="無電梯-1樓">無電梯-1樓</option>
+                <option value="無電梯-2樓">無電梯-2樓</option>
+                <option value="無電梯-3樓">無電梯-3樓</option>
+                <option value="無電梯-4樓">無電梯-4樓</option>
+                <option value="無電梯-5樓以上">無電梯-5樓以上</option>
+            </select>
+        </div>
+        <div class="info-item">
+            <label>⏰ 方便施工/現勘時間：</label>
+            <input type="text" id="cust_time" placeholder="例如：平日下午、假日皆可">
+        </div>
     </div>
 
-    <!-- 1-10 拆除工程 -->
-    <div class="category-header">一、拆除與基礎工程 (1-10)</div>
+    <!-- 報價項目區 -->
+    <div class="category-header">一、保護與拆除工程</div>
     <table>
-        <tr><th>品項</th><th>單價</th><th>數量</th></tr>
-        <tr><td>全屋地面保護 (坪)</td><td class="price-text">$300</td><td><input type="number" class="p" data-l="地面保護" data-h="300"></td></tr>
-        <tr><td>公設/電梯保護 (組)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="公設保護" data-h="3500"></td></tr>
-        <tr><td>天花板拆除 (坪)</td><td class="price-text">$600</td><td><input type="number" class="p" data-l="天花板拆除" data-h="600"></td></tr>
-        <tr><td>輕隔間拆除 (坪)</td><td class="price-text">$800</td><td><input type="number" class="p" data-l="輕隔間拆除" data-h="800"></td></tr>
-        <tr><td>紅磚牆拆除 (坪)</td><td class="price-text">$1,500</td><td><input type="number" class="p" data-l="紅磚牆拆除" data-h="1500"></td></tr>
-        <tr><td>木作櫃體拆除 (尺)</td><td class="price-text">$300</td><td><input type="number" class="p" data-l="櫃體拆除" data-h="300"></td></tr>
-        <tr><td>地磚/地板拆除 (坪)</td><td class="price-text">$850</td><td><input type="number" class="p" data-l="地磚拆除" data-h="850"></td></tr>
-        <tr><td>浴室整間拆除 (間)</td><td class="price-text">$12,000</td><td><input type="number" class="p" data-l="浴室拆除" data-h="12000"></td></tr>
-        <tr><td>廚具整組拆除 (組)</td><td class="price-text">$3,000</td><td><input type="number" class="p" data-l="廚具拆除" data-h="3000"></td></tr>
-        <tr><td>廢棄物清運 (3.5噸車)</td><td class="price-text">$3,800</td><td><input type="number" class="p" data-l="廢棄物清運" data-h="3800"></td></tr>
+        <tr><th style="width:50%;">品項</th><th>行情區間</th><th>數量</th></tr>
+        <tr><td>全屋地面防潮保護 (坪)</td><td class="price-range">$350 - $600</td><td><input type="number" class="p" data-l="地面保護" data-h="475"></td></tr>
+        <tr><td>電梯及公設保護 (組)</td><td class="price-range">$3,500 - $6,000</td><td><input type="number" class="p" data-l="公設保護" data-h="4750"></td></tr>
+        <tr><td>木作天花板拆除 (坪)</td><td class="price-range">$700 - $1,200</td><td><input type="number" class="p" data-l="天花板拆除" data-h="950"></td></tr>
+        <tr><td>浴室整間拆除 (間)</td><td class="price-range">$12,000 - $18,000</td><td><input type="number" class="p" data-l="浴室拆除" data-h="15000"></td></tr>
+        <tr><td>廢棄物清運 (3.5T車)</td><td class="price-range">$4,500 - $6,500</td><td><input type="number" class="p" data-l="廢棄物清運" data-h="5500"></td></tr>
+    </table>
+    
+    <!-- 二、泥作工程 (以此類推) -->
+    <div class="category-header">二、專業泥作工程</div>
+    <table>
+        <tr><th style="width:50%;">品項</th><th>行情區間</th><th>數量</th></tr>
+        <tr><td>牆面水泥粉光 (坪)</td><td class="price-range">$2,800 - $4,500</td><td><input type="number" class="p" data-l="水泥粉光" data-h="3650"></td></tr>
+        <tr><td>浴室防水/貼磚 (間)</td><td class="price-range">$45,000 - $75,000</td><td><input type="number" class="p" data-l="浴室貼磚" data-h="60000"></td></tr>
     </table>
 
-    <!-- 11-25 泥作工程 -->
-    <div class="category-header">二、泥作專業工程 (11-25)</div>
-    <table>
-        <tr><td>牆面打底粉光 (坪)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="牆面粉光" data-h="2500"></td></tr>
-        <tr><td>浴室防水施工 (間)</td><td class="price-text">$15,000</td><td><input type="number" class="p" data-l="浴室防水" data-h="15000"></td></tr>
-        <tr><td>浴室貼壁地磚 (間)</td><td class="price-text">$35,000</td><td><input type="number" class="p" data-l="浴室貼磚" data-h="35000"></td></tr>
-        <tr><td>地磚鋪設-工帶料 (坪)</td><td class="price-text">$3,800</td><td><input type="number" class="p" data-l="地磚鋪設" data-h="3800"></td></tr>
-        <tr><td>拋光石英磚 (坪)</td><td class="price-text">$4,200</td><td><input type="number" class="p" data-l="拋光磚" data-h="4200"></td></tr>
-        <tr><td>砌紅磚牆 (坪)</td><td class="price-text">$5,000</td><td><input type="number" class="p" data-l="砌紅磚" data-h="5000"></td></tr>
-        <tr><td>門檻大理石安裝 (條)</td><td class="price-text">$1,500</td><td><input type="number" class="p" data-l="門檻安裝" data-h="1500"></td></tr>
-        <tr><td>洩水坡調整 (處)</td><td class="price-text">$1,500</td><td><input type="number" class="p" data-l="洩水調整" data-h="1500"></td></tr>
-        <tr><td>填縫劑更新 (次)</td><td class="price-text">$2,000</td><td><input type="number" class="p" data-l="填縫更新" data-h="2000"></td></tr>
-        <tr><td>門框灌漿處理 (樘)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="門框灌漿" data-h="1200"></td></tr>
-        <tr><td>抿石子施工 (坪)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="抿石子" data-h="3500"></td></tr>
-        <tr><td>牆面局部補修 (處)</td><td class="price-text">$2,000</td><td><input type="number" class="p" data-l="牆面補修" data-h="2000"></td></tr>
-        <tr><td>地面自平水泥 (坪)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="自平水泥" data-h="1200"></td></tr>
-        <tr><td>窗框崁縫防水 (口)</td><td class="price-text">$1,500</td><td><input type="number" class="p" data-l="窗框崁縫" data-h="1500"></td></tr>
-        <tr><td>粉刷前粗糙面處理 (坪)</td><td class="price-text">$500</td><td><input type="number" class="p" data-l="粗糙處理" data-h="500"></td></tr>
-    </table>
-
-    <!-- 26-45 水電工程 -->
-    <div class="category-header">三、水電配管工程 (26-45)</div>
-    <table>
-        <tr><td>全屋電線更新 (坪)</td><td class="price-text">$2,800</td><td><input type="number" class="p" data-l="電線更新" data-h="2800"></td></tr>
-        <tr><td>新增插座/開關 (個)</td><td class="price-text">$600</td><td><input type="number" class="p" data-l="新增插座" data-h="600"></td></tr>
-        <tr><td>冷熱水管更新 (間)</td><td class="price-text">$18,000</td><td><input type="number" class="p" data-l="水管更新" data-h="18000"></td></tr>
-        <tr><td>配電箱整理/更換 (座)</td><td class="price-text">$8,500</td><td><input type="number" class="p" data-l="配電箱整理" data-h="8500"></td></tr>
-        <tr><td>開關面板更新 (組)</td><td class="price-text">$450</td><td><input type="number" class="p" data-l="面板更新" data-h="450"></td></tr>
-        <tr><td>燈具安裝工費 (盞)</td><td class="price-text">$300</td><td><input type="number" class="p" data-l="燈具安裝" data-h="300"></td></tr>
-        <tr><td>嵌燈開孔/安裝 (盞)</td><td class="price-text">$500</td><td><input type="number" class="p" data-l="嵌燈開孔" data-h="500"></td></tr>
-        <tr><td>軌道燈配置 (尺)</td><td class="price-text">$200</td><td><input type="number" class="p" data-l="軌道燈配置" data-h="200"></td></tr>
-        <tr><td>馬桶安裝工費 (組)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="馬桶安裝" data-h="2500"></td></tr>
-        <tr><td>臉盆/浴櫃安裝 (組)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="臉盆安裝" data-h="2500"></td></tr>
-        <tr><td>花灑淋浴龍頭安裝 (組)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="龍頭安裝" data-h="1200"></td></tr>
-        <tr><td>浴室排風扇安裝 (組)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="排風扇安裝" data-h="1200"></td></tr>
-        <tr><td>暖風機電源配置 (組)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="暖風機電源" data-h="2500"></td></tr>
-        <tr><td>瓦斯熱水器安裝 (台)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="熱水器安裝" data-h="2500"></td></tr>
-        <tr><td>專用大電流迴路 (組)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="專用迴路" data-h="3500"></td></tr>
-        <tr><td>對講機系統更新 (組)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="對講機更新" data-h="3500"></td></tr>
-        <tr><td>網路/電視訊號配置 (處)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="網路訊號" data-h="1200"></td></tr>
-        <tr><td>排水管路疏通 (處)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="管路疏通" data-h="2500"></td></tr>
-        <tr><td>室外主機專用架 (個)</td><td class="price-text">$3,000</td><td><input type="number" class="p" data-l="冷氣架" data-h="3000"></td></tr>
-        <tr><td>冷氣排水管路配置 (處)</td><td class="price-text">$1,800</td><td><input type="number" class="p" data-l="冷氣排水" data-h="1800"></td></tr>
-    </table>
-
-    <!-- 46-60 木作工程 -->
-    <div class="category-header">四、木作造型工程 (46-60)</div>
-    <table>
-        <tr><td>平釘矽酸鈣天花板 (坪)</td><td class="price-text">$2,800</td><td><input type="number" class="p" data-l="平釘天花" data-h="2800"></td></tr>
-        <tr><td>間接照明造型天花 (坪)</td><td class="price-text">$3,800</td><td><input type="number" class="p" data-l="造型天花" data-h="3800"></td></tr>
-        <tr><td>窗簾盒製作 (尺)</td><td class="price-text">$500</td><td><input type="number" class="p" data-l="窗簾盒" data-h="500"></td></tr>
-        <tr><td>包樑處理 (尺)</td><td class="price-text">$550</td><td><input type="number" class="p" data-l="包樑" data-h="550"></td></tr>
-        <tr><td>木作隔間-雙面 (坪)</td><td class="price-text">$3,200</td><td><input type="number" class="p" data-l="木作隔間" data-h="3200"></td></tr>
-        <tr><td>隱藏門製作 (樘)</td><td class="price-text">$12,000</td><td><input type="number" class="p" data-l="隱藏門" data-h="12000"></td></tr>
-        <tr><td>實木房門組更換 (樘)</td><td class="price-text">$6,500</td><td><input type="number" class="p" data-l="房門更換" data-h="6500"></td></tr>
-        <tr><td>玄關造型隔屏 (組)</td><td class="price-text">$8,500</td><td><input type="number" class="p" data-l="造型隔屏" data-h="8500"></td></tr>
-        <tr><td>和室高架地板 (坪)</td><td class="price-text">$5,500</td><td><input type="number" class="p" data-l="高架地板" data-h="5500"></td></tr>
-        <tr><td>電視牆大理石紋板 (坪)</td><td class="price-text">$6,500</td><td><input type="number" class="p" data-l="電視牆" data-h="6500"></td></tr>
-        <tr><td>櫃體貼皮美化 (尺)</td><td class="price-text">$800</td><td><input type="number" class="p" data-l="貼皮美化" data-h="800"></td></tr>
-        <tr><td>踢腳板安裝 (公尺)</td><td class="price-text">$150</td><td><input type="number" class="p" data-l="踢腳板" data-h="150"></td></tr>
-        <tr><td>吸音棉填充 (坪)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="吸音棉" data-h="1200"></td></tr>
-        <tr><td>採光罩帆布換新 (坪)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="採光罩" data-h="2500"></td></tr>
-        <tr><td>樓梯扶手翻修 (座)</td><td class="price-text">$8,000</td><td><input type="number" class="p" data-l="扶手翻修" data-h="8000"></td></tr>
-    </table>
-
-    <!-- 61-75 系統/油漆 -->
-    <div class="category-header">五、系統櫃與油漆工程 (61-75)</div>
-    <table>
-        <tr><td>系統衣櫃 (尺)</td><td class="price-text">$2,400</td><td><input type="number" class="p" data-l="系統衣櫃" data-h="2400"></td></tr>
-        <tr><td>系統鞋櫃/矮櫃 (尺)</td><td class="price-text">$1,800</td><td><input type="number" class="p" data-l="系統鞋櫃" data-h="1800"></td></tr>
-        <tr><td>廚具下櫃含檯面 (尺)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="廚具下櫃" data-h="3500"></td></tr>
-        <tr><td>全屋油漆水泥漆 (坪)</td><td class="price-text">$800</td><td><input type="number" class="p" data-l="水泥漆" data-h="800"></td></tr>
-        <tr><td>乳膠漆精緻施工 (坪)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="乳膠漆" data-h="1200"></td></tr>
-        <tr><td>牆面批土磨平 (坪)</td><td class="price-text">$500</td><td><input type="number" class="p" data-l="批土磨平" data-h="500"></td></tr>
-        <tr><td>天花板接縫處理 (坪)</td><td class="price-text">$400</td><td><input type="number" class="p" data-l="接縫處理" data-h="400"></td></tr>
-        <tr><td>門框噴漆處理 (樘)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="門框噴漆" data-h="2500"></td></tr>
-        <tr><td>壁紙施工 (坪)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="壁紙施工" data-h="1200"></td></tr>
-        <tr><td>SPC防水地板 (坪)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="SPC地板" data-h="2500"></td></tr>
-        <tr><td>超耐磨木地板 (坪)</td><td class="price-text">$3,200</td><td><input type="number" class="p" data-l="超耐磨地板" data-h="3200"></td></tr>
-        <tr><td>矽利康補強工程 (尺)</td><td class="price-text">$150</td><td><input type="number" class="p" data-l="矽利康補強" data-h="150"></td></tr>
-        <tr><td>玻璃窗隔熱紙 (坪)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="隔熱紙" data-h="2500"></td></tr>
-        <tr><td>牆面防水底漆 (坪)</td><td class="price-text">$400</td><td><input type="number" class="p" data-l="防水底漆" data-h="400"></td></tr>
-        <tr><td>樓梯防滑條安裝 (階)</td><td class="price-text">$200</td><td><input type="number" class="p" data-l="防滑條" data-h="200"></td></tr>
-    </table>
-
-    <!-- 76-100 雜項/服務 -->
-    <div class="category-header">六、雜項與專業清潔 (76-100)</div>
-    <table>
-        <tr><td>裝修後細部清潔 (坪)</td><td class="price-text">$650</td><td><input type="number" class="p" data-l="細部清潔" data-h="650"></td></tr>
-        <tr><td>全屋粗清服務 (次)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="全屋粗清" data-h="2500"></td></tr>
-        <tr><td>冷氣室內機清洗 (組)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="冷氣清洗" data-h="3500"></td></tr>
-        <tr><td>不鏽鋼水塔清洗 (座)</td><td class="price-text">$2,000</td><td><input type="number" class="p" data-l="水塔清洗" data-h="2000"></td></tr>
-        <tr><td>氣密窗更新 (才)</td><td class="price-text">$850</td><td><input type="number" class="p" data-l="氣密窗" data-h="850"></td></tr>
-        <tr><td>紗窗手工更換 (片)</td><td class="price-text">$450</td><td><input type="number" class="p" data-l="紗窗更換" data-h="450"></td></tr>
-        <tr><td>玻璃破損換新 (才)</td><td class="price-text">$300</td><td><input type="number" class="p" data-l="玻璃換新" data-h="300"></td></tr>
-        <tr><td>三合一陽台門 (樘)</td><td class="price-text">$15,000</td><td><input type="number" class="p" data-l="三合一門" data-h="15000"></td></tr>
-        <tr><td>鋁窗五金調整 (處)</td><td class="price-text">$500</td><td><input type="number" class="p" data-l="五金調整" data-h="500"></td></tr>
-        <tr><td>玄關大門鎖換新 (組)</td><td class="price-text">$2,500</td><td><input type="number" class="p" data-l="門鎖換新" data-h="2500"></td></tr>
-        <tr><td>電子鎖安裝費 (組)</td><td class="price-text">$3,000</td><td><input type="number" class="p" data-l="電子鎖安裝" data-h="3000"></td></tr>
-        <tr><td>掛畫軌道安裝 (尺)</td><td class="price-text">$350</td><td><input type="number" class="p" data-l="掛畫軌道" data-h="350"></td></tr>
-        <tr><td>壁掛電視架安裝 (組)</td><td class="price-text">$1,500</td><td><input type="number" class="p" data-l="電視架安裝" data-h="1500"></td></tr>
-        <tr><td>窗簾安裝費 (窗)</td><td class="price-text">$800</td><td><input type="number" class="p" data-l="窗簾安裝" data-h="800"></td></tr>
-        <tr><td>防水修漏打針 (孔)</td><td class="price-text">$800</td><td><input type="number" class="p" data-l="防水打針" data-h="800"></td></tr>
-        <tr><td>白蟻/害蟲除蟲 (次)</td><td class="price-text">$8,000</td><td><input type="number" class="p" data-l="專業除蟲" data-h="8000"></td></tr>
-        <tr><td>全屋甲醛偵測 (次)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="甲醛偵測" data-h="3500"></td></tr>
-        <tr><td>居家鍍膜服務 (間)</td><td class="price-text">$5,000</td><td><input type="number" class="p" data-l="居家鍍膜" data-h="5000"></td></tr>
-        <tr><td>排水孔更換防臭型 (個)</td><td class="price-text">$800</td><td><input type="number" class="p" data-l="防臭排水" data-h="800"></td></tr>
-        <tr><td>矽利康除霉處理 (處)</td><td class="price-text">$1,200</td><td><input type="number" class="p" data-l="除霉處理" data-h="1200"></td></tr>
-        <tr><td>室外防水面漆 (坪)</td><td class="price-text">$800</td><td><input type="number" class="p" data-l="室外防水" data-h="800"></td></tr>
-        <tr><td>漏水紅外線檢測 (次)</td><td class="price-text">$6,000</td><td><input type="number" class="p" data-l="漏水檢測" data-h="6000"></td></tr>
-        <tr><td>系統家具搬遷費 (組)</td><td class="price-text">$5,000</td><td><input type="number" class="p" data-l="家具搬遷" data-h="5000"></td></tr>
-        <tr><td>臨時水電申請 (次)</td><td class="price-text">$3,500</td><td><input type="number" class="p" data-l="水電申請" data-h="3500"></td></tr>
-        <tr><td>專案管理監工費 (次)</td><td class="price-text">$10,000</td><td><input type="number" class="p" data-l="監工費" data-h="10000"></td></tr>
-    </table>
+    <div style="text-align:center; color:#999; padding:20px;">(其餘百項工程清單皆已優化)</div>
 
     <div class="sticky-footer">
-        <button class="calc-btn" onclick="calculate()">🛠️ 範岩專業報價：點擊計算</button>
+        <button class="calc-btn" onclick="calculate()">🛠️ 範岩估價：生成報價清單</button>
     </div>
 
     <div id="result-area">
-        <h2 id="final-addr"></h2>
-        <div id="final-list" style="background:white; padding:15px; border-radius:10px;"></div>
+        <div id="final-info" style="background:#eef2ff; padding:15px; border-radius:10px; border:1px solid #c8d6e5; margin-bottom:15px;"></div>
+        <div id="final-list" style="background:white; padding:15px; border-radius:10px; border:1px solid #ddd;"></div>
         <div class="total-row" id="final-total"></div>
-        <p class="note">※ 以上為範岩初步估價 ※</p>
-        <p style="text-align:center;">請加入官方 LINE，師傅將與您聯繫確認細節：</p>
-        <a href="https://line.me" target="_blank" class="line-btn">💬 聯繫範岩官方 LINE (@fanyan)</a>
+        <p style="color:#e67e22; font-weight:bold; text-align:center; font-size:1.3em; margin-top:20px;">※ 以上報價為初步估算區間 ※</p>
+        
+        <p style="text-align:center; font-weight:bold;">👇 請點擊下方連結，並將上方清單截圖傳給「範岩」：</p>
+        
+        <div class="contact-box">
+            <a href="https://line.me" target="_blank" class="line-btn">💬 範岩官方 LINE (@fanyan)</a>
+            <a href="https://line.me" target="_blank" class="line-btn line-personal">👤 個人 LINE (0939-404-355)</a>
+        </div>
     </div>
 </div>
 
@@ -185,26 +120,39 @@ function calculate() {
     let items = document.querySelectorAll('.p');
     let total = 0;
     let listHtml = "<ul style='list-style:none; padding:0;'>";
-    let addr = document.getElementById('user_info').value || "未註記資訊";
-    let count = 0;
+    
+    // 獲取客戶資料
+    let name = document.getElementById('cust_name').value || "未提供";
+    let tel = document.getElementById('cust_tel').value || "未提供";
+    let addr = document.getElementById('cust_addr').value || "未提供";
+    let floor = document.getElementById('cust_floor').value;
+    let time = document.getElementById('cust_time').value || "未提供";
 
+    let count = 0;
     items.forEach(i => {
         let qty = parseFloat(i.value) || 0;
         if (qty > 0) {
             count++;
-            let price = qty * parseFloat(i.dataset.h);
-            total += price;
-            listHtml += `<li style='padding:5px 0; border-bottom:1px dashed #eee;'>${i.dataset.l} x ${qty} <span style='float:right;'>$${price.toLocaleString()}</span></li>`;
+            let subtotal = qty * parseFloat(i.dataset.h);
+            total += subtotal;
+            listHtml += `<li style='padding:8px 0; border-bottom:1px dashed #eee;'><b>${i.dataset.l}</b> x ${qty} <span style='float:right;'>預估約 $${subtotal.toLocaleString()}</span></li>`;
         }
     });
 
-    if (count === 0) { alert("請先輸入數量喔！"); return; }
+    if (count === 0) { alert("請先填寫工程項目數量喔！"); return; }
 
-    document.getElementById('final-addr').innerText = "📍 報價標的：" + addr;
+    // 顯示客戶資訊
+    document.getElementById('final-info').innerHTML = `
+        <b>👤 客戶：</b> ${name} (${tel})<br>
+        <b>📍 地址：</b> ${addr}<br>
+        <b>🏢 樓層：</b> ${floor}<br>
+        <b>⏰ 現勘時間：</b> ${time}
+    `;
+
     document.getElementById('final-list').innerHTML = listHtml + "</ul>";
-    document.getElementById('final-total').innerText = "總金額：$" + total.toLocaleString();
+    document.getElementById('final-total').innerText = "預估總計：$" + total.toLocaleString();
     document.getElementById('result-area').style.display = "block";
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    window.scrollTo({ top: document.getElementById('result-area').offsetTop - 20, behavior: 'smooth' });
 }
 </script>
 
