@@ -1,1 +1,42 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>城市裝修報價系統</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .box { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 15px; background: #3498db; color: #fff; border: none; cursor: pointer; }
+        #res { display: none; margin-top: 20px; background: #fffbe6; padding: 15px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🏠 城市裝修報價</h2>
+        地址：<input type="text" id="addr">
+        卡扣地板 (坪)：<input type="number" class="p" data-l="2800" data-h="4500">
+        浴室翻新 (間)：<input type="number" class="p" data-l="135000" data-h="220000">
+        <button onclick="go()">開始計算報價</button>
+        <div id="res">
+            <div id="out"></div>
+            <a href="https://line.me" style="display:block;text-align:center;background:#00c300;color:#fff;padding:10px;margin-top:10px;text-decoration:none;">✅ 加入 LINE 官方：＠fanyan</a>
+        </div>
+    </div>
+    <script>
+        function go(){
+            let items=document.querySelectorAll('.p'),L=0,H=0,t="";
+            items.forEach(i=>{
+                let v=parseFloat(i.value)||0;
+                if(v>0){
+                    L+=v*i.dataset.l; H+=v*i.dataset.h;
+                    t+="項目報價: $"+(v*i.dataset.l).toLocaleString()+"~"+(v*i.dataset.h).toLocaleString()+"<br>";
+                }
+            });
+            if(L==0)return alert("請輸入數量");
+            document.getElementById('out').innerHTML=t+"<hr><h3>總預算: $"+L.toLocaleString()+"~"+H.toLocaleString()+"</h3>";
+            document.getElementById('res').style.display='block';
+        }
+    </script>
+</body>
+</html>
